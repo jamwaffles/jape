@@ -1,0 +1,3 @@
+JAPE-0.0.1
+
+All this does is provide a basic OpenGL window with font rendering capability and double buffering. it also displays the frames/second and has a function that allows animation to be played at a speed independant of framerate
