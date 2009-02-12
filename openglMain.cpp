@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "openglTerminal.h"
 #include "openglFrameTimer.h"
 #include "openglFps.h"
 #include "japeEngine.h"
 
 unsigned int g_persp = 0, g_ortho = 0;
 float angle = 0.0;
+int windowWidth = 800, windowHeight = 600;
+bool showTerminal;
 
 japeEmitter Emitter;
+openglTerminal Terminal;
 
 void japeInit()
 {
@@ -46,24 +50,26 @@ void openglIdle()
 
 void openglReshape(int w, int h) 
 {
-	if (h==0) 
+	windowWidth = w;
+	windowHeight = h;
+	if(h == 0) 
 	{
-		h=1;
+		h = 1;
 	}
 
 	// delete the last display lists
-	glDeleteLists(g_persp,1);
-	glDeleteLists(g_ortho,1);
+	glDeleteLists(g_persp, 1);
+	glDeleteLists(g_ortho, 1);
 
 	// set the drawable region of the window
-	glViewport(0,0,w,h);
+	glViewport(0, 0, w, h);
 
 	// generate new display list ID's
 	g_persp = glGenLists(1);
 	g_ortho = glGenLists(1);
 
 	// generate perspective display list
-	glNewList(g_persp,GL_COMPILE);
+	glNewList(g_persp, GL_COMPILE);
 
 		// set up the projection matrix 
 		glMatrixMode(GL_PROJECTION);
@@ -127,9 +133,14 @@ void openglDraw(void)
 
 	//2D/text	*****************************************
 	glColor4f(1.0, 1.0, 1.0, 1.0);
-	fontSet(GLUT_BITMAP_HELVETICA_18);
-	fontDraw("Hello world", 10, 48);
-	printFps();
+
+	if(showTerminal == true)
+	{
+		Terminal.showLines();
+	}
+	
+	fontSet(GLUT_BITMAP_HELVETICA_10);
+	fontDraw(printFps(), (windowWidth - 60), 11);
 	
 	// currently we've been drawing to the back buffer, we need
 	// to swap the back buffer with the front one to make the image visible
@@ -138,9 +149,23 @@ void openglDraw(void)
 
 void openglNormalKeys(unsigned char key, int x, int y) 
 {
-	if (key == 27) 
+	switch (key) 
 	{
-		exit(0);
+		case 27:
+			Terminal.print("Exiting JAPE");
+			exit(0);
+		break;
+		
+		case 't':
+			if(showTerminal == true)
+			{
+				showTerminal = false;
+			}
+			else if(showTerminal == false)
+			{
+				showTerminal = true;
+			}
+		break;
 	}
 }
 
@@ -156,8 +181,8 @@ int openglInit()
 {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(800, 600);
-	glutCreateWindow("");
+	glutInitWindowSize(windowWidth, windowHeight);
+	glutCreateWindow("JAPE Particle Engine Demo");
 	glutDisplayFunc(openglDraw);
 	glutIdleFunc(openglIdle);
 	glutReshapeFunc(openglReshape);
@@ -170,10 +195,23 @@ int openglInit()
 
 int main(int argc, char **argv) 
 {
+	showTerminal = true;
+	
+	Terminal.print("JAPE-0.0.3");
+	Terminal.print("Single point demo with 100 particles");
+	
+	Terminal.print("Initialising frame counter/timer...");
 	InitFrameTimer();
+	Terminal.print("Done");
 	
 	glutInit(&argc, argv);
+	
+	Terminal.print("Initialising JAPE...");
 	japeInit();
+	Terminal.print("Done");
+	
+	Terminal.print("Initialisng OpenGL window...");
 	openglInit();
+	Terminal.print("Done");
 }
 

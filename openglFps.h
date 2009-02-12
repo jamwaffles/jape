@@ -21,7 +21,7 @@
 
 #include "openglFont.h"
 
-void printFps();
+char *printFps();
 
 #endif
 

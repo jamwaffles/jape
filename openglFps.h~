@@ -19,6 +19,8 @@
 #ifndef __OPENGL_FPS_H___
 #define __OPENGL_FPS_H___
 
+#include "openglFont.h"
+
 void printFps();
 
 #endif

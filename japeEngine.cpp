@@ -8,9 +8,6 @@ int japeEmitter::createParticles(int numParticles)
 	malloc(sizeof(japeParticle[numParticles]));
 	particles = new japeParticle[numParticles];
 	
-	//malloc(sizeof(japeParticle[numParticles]));
-	//particles = malloc(sizeof(japeParticle) * numParticles);
-	
 	for(int pCount = 0; pCount <= numParticles; pCount++)
 	{
 		particles[pCount].posx = 0;

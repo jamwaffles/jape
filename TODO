@@ -1,5 +1,5 @@
-JAPE-0.0.1
+JAPE-0.0.3
 
 Add blending to the OpenGL initialisation bit
 
-Allow parameters to be added to points created.
+Write a n-line output terminal in the OpenGL window

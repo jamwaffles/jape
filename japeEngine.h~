@@ -24,4 +24,7 @@ class japeEmitter
 		void colorParticles(float r, float g, float b);
 		void updateParticles(void);
 		void drawParticles(void);
+		
+		void increaseVelx();
+		void decreaseVelx();
 };

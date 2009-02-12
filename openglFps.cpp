@@ -5,7 +5,7 @@
 int frame, time, timebase = 0;
 char s[30];
 
-void printFps()
+char *printFps()
 {
 	frame++;
 	time = glutGet(GLUT_ELAPSED_TIME);
@@ -16,6 +16,5 @@ void printFps()
 		frame = 0;
 	}
 	
-	fontSet(GLUT_BITMAP_HELVETICA_10);
-	fontDraw(s, 1, 11);
+	return s;
 }
