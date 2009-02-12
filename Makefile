@@ -1,5 +1,5 @@
 OUT=openglMain
-OBJ=openglMain.o openglFont.o openglFrameTimer.o openglFps.o
+OBJ=openglMain.o openglFont.o openglFrameTimer.o openglFps.o japeEngine.o
 CC=g++
 CCFLAGS=-Wall -g -pedantic
 LIBS=-lglut

@@ -1,5 +1,5 @@
 JAPE-0.0.1
 
-Write prototype particle engine and add blending to the OpenGL initialisation bit
+Add blending to the OpenGL initialisation bit
 
-
+Allow parameters to be added to points created.

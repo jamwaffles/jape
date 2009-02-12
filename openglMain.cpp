@@ -1,14 +1,20 @@
-#include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
-using namespace::std;
 
 #include "openglFrameTimer.h"
 #include "openglFps.h"
+#include "japeEngine.h"
 
 unsigned int g_persp = 0, g_ortho = 0;
 float angle = 0.0;
+
+japeEmitter Emitter;
+
+void japeInit()
+{
+	Emitter.createParticles(100);
+	Emitter.colorParticles(1, 1, 1);
+}
 
 void openglIdle()
 {
@@ -31,6 +37,8 @@ void openglIdle()
 	//
 	//g_Rotation += 90.0f * FrameTime(); 						variables here
 	angle += 90 * FrameTime();
+
+	Emitter.updateParticles();
 
 	// redraw the screen
 	glutPostRedisplay();
@@ -104,18 +112,21 @@ void openglDraw(void)
 
 	//3D stuff	*****************************************
 	
-	glRotatef(angle, 0.0, 1.0, 0.0);
+	//glRotatef(angle, 0.0, 1.0, 0.0);
 
-	glBegin(GL_TRIANGLES);
+	/*glBegin(GL_TRIANGLES);
 		glVertex3f(-0.5, -0.5, 0.0);
 		glVertex3f(0.5, 0.0, 0.0);
 		glVertex3f(0.0, 0.5, 0.0);
-	glEnd();
+	glEnd();*/
+	
+	Emitter.drawParticles();
 
 	// set the orthographic projection
 	glCallList(g_ortho);
 
 	//2D/text	*****************************************
+	glColor4f(1.0, 1.0, 1.0, 1.0);
 	fontSet(GLUT_BITMAP_HELVETICA_18);
 	fontDraw("Hello world", 10, 48);
 	printFps();
@@ -127,7 +138,6 @@ void openglDraw(void)
 
 void openglNormalKeys(unsigned char key, int x, int y) 
 {
-
 	if (key == 27) 
 	{
 		exit(0);
@@ -163,6 +173,7 @@ int main(int argc, char **argv)
 	InitFrameTimer();
 	
 	glutInit(&argc, argv);
+	japeInit();
 	openglInit();
 }
 

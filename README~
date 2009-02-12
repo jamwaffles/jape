@@ -1,3 +1,7 @@
-JAPE-0.0.1
+JAPE-0.0.2
 
-All this does is provide a basic OpenGL window with font rendering capability and double buffering. it also displays the frames/second and has a function that allows animation to be played at a speed independant of framerate
+All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
+it also displays the frames/second and has a function that allows animation to be played at a speed
+independant of framerate. also, 0.0.2 now has *some* particle engine functionality (creating points, 
+particles, drawing them, updating them (calculating next positions, although no external paramaters 
+can be applied yet)).
