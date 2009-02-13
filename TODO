@@ -1,5 +1,5 @@
-JAPE-0.0.3
+JAPE-0.0.4
 
 Add blending to the OpenGL initialisation bit
 
-Write a n-line output terminal in the OpenGL window
+add basic particle functionality (particles actually moving)

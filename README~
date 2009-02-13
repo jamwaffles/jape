@@ -1,6 +1,8 @@
-JAPE-0.0.2
+JAPE-0.0.4
 
 All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
 it also displays the frames/second and has a function that allows animation to be played at a speed
-independant of framerate. also, 0.0.2 now has *some* particle engine functionality (creating points, 
-particles, drawing them, updating them (calculating next positions)).
+independant of framerate. also, 0.0.4 now has *some* particle engine functionality (creating points, 
+particles, drawing them, updating them (calculating next positions)). 0.0.3 has a nice output prompt 
+in the opengl window to report any messages using Terminal.print(). the functions then take care of 
+scrolling out put/displaying it.

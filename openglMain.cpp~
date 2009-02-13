@@ -16,7 +16,7 @@ openglTerminal Terminal;
 
 void japeInit()
 {
-	Emitter.createParticles(100);
+	Emitter.createParticles(10000, 0, 0, 0);
 	Emitter.colorParticles(1, 1, 1);
 }
 
@@ -40,7 +40,7 @@ void openglIdle()
 	// 	units per second
 	//
 	//g_Rotation += 90.0f * FrameTime(); 						variables here
-	angle += 90 * FrameTime();
+	angle += 20 * FrameTime();
 
 	Emitter.updateParticles();
 
@@ -112,13 +112,13 @@ void openglDraw(void)
 	glCallList(g_persp);
 
 	// set the camera position
-	gluLookAt(	1, 1, 10,	//	eye pos
+	gluLookAt(	1, 1, 100,	//	eye pos
 				0, 0, 0,	//	aim point
 				0, 1, 0);	//	up direction
 
 	//3D stuff	*****************************************
 	
-	//glRotatef(angle, 0.0, 1.0, 0.0);
+	glRotatef(angle, 0.0, 1.0, 0.0);
 
 	/*glBegin(GL_TRIANGLES);
 		glVertex3f(-0.5, -0.5, 0.0);
@@ -197,7 +197,7 @@ int main(int argc, char **argv)
 {
 	showTerminal = true;
 	
-	Terminal.print("JAPE-0.0.3");
+	Terminal.print("JAPE-0.0.4");
 	Terminal.print("Single point demo with 100 particles");
 	
 	Terminal.print("Initialising frame counter/timer...");
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
 	Terminal.print("Done");
 	
 	Terminal.print("Initialisng OpenGL window...");
-	openglInit();
 	Terminal.print("Done");
+	openglInit();
 }
 
