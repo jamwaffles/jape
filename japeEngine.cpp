@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <cstdlib>
 
-float particleGravity = 0.0001f;
+float particleGravity = -0.0001f;
 
 int japeEmitter::createParticles(int numParticles, float x, float y, float z)
 {
@@ -20,28 +20,19 @@ int japeEmitter::createParticles(int numParticles, float x, float y, float z)
 		particles[pCount].posy = y;
 		particles[pCount].posz = z;
 		
+		particles[pCount].accx = 0;
+		particles[pCount].accy = 0;
+		particles[pCount].accz = 0;
+		
 		particles[pCount].velx = 0;
 		particles[pCount].vely = 0;
 		particles[pCount].velz = 0;
-		
-		particles[pCount].accx = 1 + rand() % 100;
-		particles[pCount].accx -= 50;
-		particles[pCount].accx /= 10000;
-		
-		particles[pCount].accy = 1 + rand() % 100;
-		particles[pCount].accy -= 50;
-		particles[pCount].accy /= 10000;
-		
-		particles[pCount].accz = 1 + rand() % 100;
-		particles[pCount].accz -= 50;
-		particles[pCount].accz /= 10000;
 		
 		particles[pCount].colr = 0;
 		particles[pCount].colg = 0;;
 		particles[pCount].colb = 0;
 		
 		particles[pCount].fade = 1 + rand() % 100;
-		particles[pCount].fade /= 1000;
 		particles[pCount].life = 1;
 	}
 	
@@ -55,6 +46,10 @@ void japeEmitter::colorParticles(float r, float g, float b)
 		particles[x].colr = r;
 		particles[x].colg = g;
 		particles[x].colb = b;
+		
+		EmitterProperties.colr = r;
+		EmitterProperties.colg = g;
+		EmitterProperties.colb = b;
 	}
 }
 
@@ -67,40 +62,39 @@ void japeEmitter::updateParticles()
 		particles[y].posz += particles[y].velz;
 		//
     	particles[y].velx += particles[y].accx;
-		particles[y].vely += particles[y].accy - particleGravity;
+		particles[y].vely += particles[y].accy;
 		particles[y].velz += particles[y].accz;
 		
 		particles[y].life -= particles[y].fade;
 		
-		if(particles[y].life <= 0)
+		if(particles[y].life < 0)
 		{
 			particles[y].posx = pointx;
 			particles[y].posy = pointy;
 			particles[y].posz = pointz;
+			
+			particles[y].accx = 0;
+			particles[y].accy = particleGravity;
+			particles[y].accz = 0;
 		
-			particles[y].velx = 0;
-			particles[y].vely = 0;
-			particles[y].velz = 0;
+			particles[y].velx = 1 + rand() % 100;
+			particles[y].velx -= EmitterProperties.xdir;
+			particles[y].velx /= EmitterProperties.xspeed;
 		
-			particles[y].accx = 1 + rand() % 100;
-			particles[y].accx -= 50;
-			particles[y].accx /= 100000;
+			particles[y].vely = 1 + rand() % 100;
+			particles[y].vely -= EmitterProperties.ydir;
+			particles[y].vely /= EmitterProperties.yspeed;
 		
-			particles[y].accy = 1 + rand() % 100;
-			particles[y].accy -= 50;
-			particles[y].accy /= 100000;
+			particles[y].velz = 1 + rand() % 100;
+			particles[y].velz -= EmitterProperties.zdir;
+			particles[y].velz /= EmitterProperties.zspeed;
 		
-			particles[y].accz = 1 + rand() % 100;
-			particles[y].accz -= 50;
-			particles[y].accz /= 100000;
+			particles[y].colr = EmitterProperties.colr;
+			particles[y].colg = EmitterProperties.colg;
+			particles[y].colb = EmitterProperties.colb;
 		
-			particles[y].colr = 1;
-			particles[y].colg = 1;
-			particles[y].colb = 1;
-		
-			particles[y].fade = 1 + rand() % 100;
-			particles[y].fade /= 1000;
-			particles[y].life = 1;
+			particles[y].life = 5.0f;
+			particles[y].fade = float(rand() % 100) / 1000.0f + 0.003f;
 		}
 	}
 }
@@ -110,25 +104,11 @@ void japeEmitter::drawParticles()
 	for(int i = 0; i <= particleCount; i++)
 	{	
 		glPointSize(5);
-		glColor3f(particles[i].colr, particles[i].colg, particles[i].colb);
+		glColor4f(particles[i].colr, particles[i].colg, particles[i].colb, particles[i].life);
 		glBegin(GL_POINTS);
 			glVertex3f(particles[i].posx, particles[i].posy, particles[i].posz);
 		glEnd();
 	}
-}
-
-void japeEmitter::randSet(int vel, int acc)
-{
-	/*for(int z = 0; z <= particleCount; z++)
-	{	
-		particles[z].posx = float((rand() % vel) / 10000);
-		particles[z].posy = float((rand() % vel) / 10000);
-		particles[z].posz = float((rand() % vel) / 10000);
-		
-		particles[z].accx = float((rand() % acc) / 10000);
-		particles[z].accy = float((rand() % acc) / 10000);
-		particles[z].accz = float((rand() % acc) / 10000);
-	}*/
 }
 
 void japeEmitter::movePoint(float x, float y, float z)
@@ -136,4 +116,22 @@ void japeEmitter::movePoint(float x, float y, float z)
 	pointx = x;
 	pointy = y;
 	pointz = z;
+}
+
+void japeEmitter::vectorParticles(float x, float y, float z)
+{
+	/*x *= 100;
+	y *= 100;
+	z *= 100;*/
+
+	EmitterProperties.xdir = x;
+	EmitterProperties.ydir = y;
+	EmitterProperties.zdir = z;
+}
+
+void japeEmitter::speedParticles(float x, float y, float z)
+{
+	EmitterProperties.xspeed = x;
+	EmitterProperties.yspeed = y;
+	EmitterProperties.zspeed = z;
 }

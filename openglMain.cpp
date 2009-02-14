@@ -11,13 +11,23 @@ float angle = 0.0;
 int windowWidth = 800, windowHeight = 600;
 bool showTerminal;
 
-japeEmitter Emitter;
-openglTerminal Terminal;
+japeEmitter Emitter;					//first point
+japeEmitter Emitter2;					//second point
+openglTerminal Terminal;				//output
+bool runSim = true;						//run simulation flag
+bool rotate = false;					//rotate flag
 
 void japeInit()
 {
-	Emitter.createParticles(10000, 0, 0, 0);
-	Emitter.colorParticles(1, 1, 1);
+	Emitter.createParticles(1000, -2, 0, 0);
+	Emitter.vectorParticles(50, 0, 50);
+	Emitter.speedParticles(10000, 4000, 10000);
+	Emitter.colorParticles(1, 0, 1);
+	
+	Emitter2.createParticles(1000, 2, 0, 0);
+	Emitter2.vectorParticles(50, 50, 50);
+	Emitter2.speedParticles(10000, 10000, 10000);
+	Emitter2.colorParticles(1, 1, 0);
 }
 
 void openglIdle()
@@ -40,9 +50,16 @@ void openglIdle()
 	// 	units per second
 	//
 	//g_Rotation += 90.0f * FrameTime(); 						variables here
-	angle += 20 * FrameTime();
-
-	Emitter.updateParticles();
+	if(runSim)
+	{
+		if(rotate)
+		{
+			angle += 20 * FrameTime();
+		}
+	
+		Emitter.updateParticles();
+		Emitter2.updateParticles();	 
+	}
 
 	// redraw the screen
 	glutPostRedisplay();
@@ -127,6 +144,7 @@ void openglDraw(void)
 	glEnd();*/
 	
 	Emitter.drawParticles();
+	Emitter2.drawParticles();	
 
 	// set the orthographic projection
 	glCallList(g_ortho);
@@ -152,6 +170,7 @@ void openglNormalKeys(unsigned char key, int x, int y)
 	switch (key) 
 	{
 		case 27:
+		case 'q':
 			Terminal.print("Exiting JAPE");
 			exit(0);
 		break;
@@ -165,6 +184,38 @@ void openglNormalKeys(unsigned char key, int x, int y)
 			{
 				showTerminal = true;
 			}
+		break;
+		
+		case 'p':
+			if(runSim)
+			{
+				runSim = false;
+				Terminal.print("Simulation paused");
+			}
+			else if(!runSim)
+			{
+				runSim = true;
+				Terminal.print("Simulation resumed");
+			}
+		break;
+		
+		case 's':
+			if(rotate)
+			{
+				rotate = false;
+				Terminal.print("Rotate: no");
+			}
+			else if(!rotate)
+			{
+				rotate = true;
+				Terminal.print("Rotate: yes");
+			}
+		break;
+		
+		case 'r':
+			rotate = false;
+			runSim = true;
+			angle = 0.0f;
 		break;
 	}
 }
@@ -187,6 +238,26 @@ int openglInit()
 	glutIdleFunc(openglIdle);
 	glutReshapeFunc(openglReshape);
 
+	//AA/Blending
+	GLfloat values[2];
+    glGetFloatv(GL_LINE_WIDTH_GRANULARITY, values);
+    glGetFloatv(GL_LINE_WIDTH_RANGE, values);
+    glEnable(GL_POINT_SMOOTH);
+    Terminal.print("Enabling blending...");
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Terminal.print("Done");
+    glHint(GL_POINT_SMOOTH_HINT, GL_DONT_CARE);
+	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+	glClearDepth(10.0f);
+	glDisable(GL_DEPTH_TEST);			
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);			
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+
 	//adding here the setting of keyboard processing
 	glutKeyboardFunc(openglNormalKeys);
 	glutSpecialFunc(openglSpecialKeys);
@@ -197,8 +268,8 @@ int main(int argc, char **argv)
 {
 	showTerminal = true;
 	
-	Terminal.print("JAPE-0.0.4");
-	Terminal.print("Single point demo with 100 particles");
+	Terminal.print("JAPE-0.0.5");
+	Terminal.print("Single point demo with 2000 particles in 2 points");
 	
 	Terminal.print("Initialising frame counter/timer...");
 	InitFrameTimer();

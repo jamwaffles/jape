@@ -1,3 +1,14 @@
-JAPE-0.0.4
+JAPE-0.0.5
 
-This is an interrim between 0.0.3 and 0.0.5, just to test particle functionality. it has no definable values and has all the features of 0.0.3.
+All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
+it also displays the frames/second and has a function that allows animation to be played at a speed
+independant of framerate. also, 0.0.4 now has *some* particle engine functionality (creating points, 
+particles, drawing them, updating them (calculating next positions)). 0.0.3 and above has a nice output 
+prompt in the opengl window to report any messages using Terminal.print(). the functions then take care of 
+scrolling out put/displaying it. 0.0.5 now has the ability to give properties to a point to control 
+the direction/speed of the particles to make different effects, like fountains or explosions etc. 
+(well, dunno about the explosions. maybe add a function to disable/reenable points). 
+
+BUGS:
+
+for some reason a japeEmitter point position cant be a negative number

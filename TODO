@@ -1,5 +1,9 @@
-JAPE-0.0.4
+JAPE-0.0.5
 
-Add blending to the OpenGL initialisation bit
+Add function to enable/disable points for explosions etc.
 
-add basic particle functionality (particles actually moving)
+Add ability to enter things in the Terminal and allow the user to decide when they want a new line or not (\n) - SourceBoost
+LCD functions should come in handy
+
+Add texture support and ability to have it on/off for certain points. on second thoughts, add something that allows a shape 
+drawing function (textures, polies, points) to define what the particle looks like.
