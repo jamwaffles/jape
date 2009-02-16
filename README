@@ -1,3 +1,5 @@
+THIS CODE IS PUBLISHED UNDER THE GPL LICENSE, COPYRIGHT JAMES WAPLES 2009
+
 JAPE-0.0.5
 
 All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
@@ -11,4 +13,16 @@ the direction/speed of the particles to make different effects, like fountains o
 
 BUGS:
 
-for some reason a japeEmitter point position cant be a negative number
+for some reason a japeEmitter point Y position cant be anything other than zero (craptastic ¬¬)
+
+KEYS:
+
+E:		enable/disable points
+S:		rotate/dont rotate the scene
+T:		enable/disable terminal
+V:		bomb 1
+B:		bomb 2
+N:		bomb 3
+Q/Esc:	quit
+R:		reset roatation
+P:		pause/resume simulation
