@@ -1,27 +1,34 @@
-#ifndef _TGA_H
-#define _TGA_H
+#define	TGA_ERROR_FILE_OPEN				-5
+#define TGA_ERROR_READING_FILE			-4
+#define TGA_ERROR_INDEXED_COLOR			-3
+#define TGA_ERROR_MEMORY				-2
+#define TGA_ERROR_COMPRESSED_FILE		-1
+#define TGA_OK							 0
 
-#include <iostream>
 
-// These defines are used to tell us about the type of TARGA file it is
-#define TGA_RGB		 2		// This tells us it's a normal RGB (really BGR) file
-#define TGA_A		 3		// This tells us it's a ALPHA file
-#define TGA_RLE		10		// This tells us that the targa is Run-Length Encoded (RLE)
+typedef struct {
+	int status;
+	unsigned char type, pixelDepth;
+	short int width, height;
+	unsigned char *imageData;
+}tgaInfo;
 
-// This is our image structure for our targa data
-struct tImageTGA
-{
-	int channels;			// The channels in the image (3 = RGB : 4 = RGBA)
-	int sizeX;			// The width of the image in pixels
-	int sizeY;			// The height of the image in pixels
-	unsigned char *data;		// The image pixel data
-};
+tgaInfo* tgaLoad(char *filename);
 
-/// functions prototypes
-tImageTGA *LoadTGA(const char *filename);
+int tgaSave(char			*filename, 
+			 short int		width, 
+			 short int		height, 
+			 unsigned char	pixelDepth, 
+			 unsigned char	*imageData);
 
-void CreateTexture(GLuint textureArray[], char *strFileName, int textureID);
+int tgaSaveSeries(char			*filename, 
+			 short int		width, 
+			 short int		height, 
+			 unsigned char	pixelDepth, 
+			 unsigned char	*imageData);
 
-#endif
-/* end of tga.h */
+void tgaRGBtoGreyscale(tgaInfo *info);
 
+int tgaGrabScreenSeries(char *filename, int x,int y, int w, int h);
+
+void tgaDestroy(tgaInfo *info);

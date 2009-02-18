@@ -5,6 +5,7 @@
 #include "openglFrameTimer.h"
 #include "openglFps.h"
 #include "japeEngine.h"
+#include <gc/gc.h>
 
 unsigned int g_persp = 0, g_ortho = 0;
 float angle = 0.0;
@@ -26,28 +27,32 @@ bool globalEnabled = true;
 void japeInit()
 {
 	Emitter.type = JAPE_POINT;
-	Emitter.createParticles(1000, -1, 0, 0);
+	Emitter.texture("./Textures/particle.png", 0.07);
+	Emitter.createParticles(600, -1, 0, 0);
 	Emitter.vectorParticles(50, 0, 50);
 	Emitter.speedParticles(10000, 4000, 10000);
-	Emitter.colorParticles(1, 0, 1);
+	Emitter.colorParticles(1, 1, 1);
 	Emitter.fadeAmount = 1000;
 	
 	Emitter2.type = JAPE_POINT;
-	Emitter2.createParticles(1000, 1, 0, 0);
+	Emitter2.texture("./Textures/particlehalo.png", 0.07);
+	Emitter2.createParticles(600, 1, 0, 0);
 	Emitter2.vectorParticles(50, 50, 50);
 	Emitter2.speedParticles(10000, 10000, 10000);
 	Emitter2.colorParticles(1, 1, 0);
 	Emitter2.fadeAmount = 1000;
 	
 	Emitter3.type = JAPE_POINT;
-	Emitter3.createParticles(1000, 0, 0, 0);
+	Emitter3.texture("./Textures/dust.png", 0.07);
+	Emitter3.createParticles(600, 0, 0, 0);
 	Emitter3.vectorParticles(50, 50, 50);
 	Emitter3.speedParticles(10000, 10000, 10000);
-	Emitter3.colorParticles(1, 1, 1);
+	Emitter3.colorParticles(1, 0, 1);
 	Emitter3.fadeAmount = 1000;
 	
 	Bomb1.type = JAPE_EXPLOSION;
-	Bomb1.createParticles(1000, 2, 0, 0);
+	Bomb1.texture("./Textures/cloud.png", 0.07);
+	Bomb1.createParticles(600, 2, 0, 0);
 	Bomb1.vectorParticles(50, 50, 50);
 	Bomb1.speedParticles(1000, 1000, 1000);
 	Bomb1.colorParticles(1, 0.5, 0);
@@ -313,7 +318,7 @@ void openglSpecialKeys(int key, int x, int y)
 			camZpos += 0.5;
 		break;
 		case GLUT_KEY_UP:
-			camZpos += 0.5;
+			camZpos -= 0.5;
 		break;
 	}
 }
@@ -348,6 +353,7 @@ int openglInit()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);			
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+	glEnable(GL_TEXTURE_2D);
 
 	//adding here the setting of keyboard processing
 	glutKeyboardFunc(openglNormalKeys);
@@ -356,11 +362,12 @@ int openglInit()
 
 int main(int argc, char **argv) 
 {
+	GC_INIT();
 	showTerminal = true;
 	
 	glutInit(&argc, argv);
-	japeInit();
 	openglInit();
+	japeInit();
 	
 	Terminal.print("JAPE-0.0.6\n", BOTH);
 	Terminal.print("Cool JAPE engine demo with different effects\n", BOTH);

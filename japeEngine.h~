@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <iostream>
 using namespace::std;
+#include <GL/glpng.h>
 
 typedef struct
 {
@@ -20,7 +21,7 @@ typedef struct
 	float xspeed, yspeed, zspeed;
 	float colr, colg, colb;
 	
-	float texSize;
+	float texsize;
 }
 japeEmitterProperties;
 
@@ -30,6 +31,7 @@ japeEmitterProperties;
 class japeEmitter
 {	
 	japeParticle *particles;				//i obviously need this to do something with or i get errors
+	japeParticle *particles2;
 	japeEmitterProperties EmitterProperties;
 	int particleCount;						//global variable to store number of particles from japeEmitter::createParticles()
 	float pointx, pointy, pointz;
@@ -38,6 +40,7 @@ class japeEmitter
 		int type;
 		bool enabled;
 		float fadeAmount;
+		GLuint textureID;
 		
 		int createParticles(int numParticles, float x, float y, float z);
 		void texture(char *filename, float size);

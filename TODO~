@@ -2,13 +2,11 @@ JAPE-0.0.6
 
 Add ability to enter things in the Terminal and allow the user to decide when they want a new line or not (\n) - SourceBoost
 LCD functions should come in handy for finding '\n's. TODO: also add ablility to output variables. newline function now 
-works
+works (sort of)
 
 Add texture support and ability to have it on/off for certain points. on second thoughts, add something that allows a shape 
-drawing function (textures, polies, points) to define what the particle looks like.
+drawing function (textures, polies, points) to define what the particle looks like. DONE: now uses GLPNG to add textures. 
 
-TODO: 
-
-texture support
+TODO: POINT SPRITES
 
 

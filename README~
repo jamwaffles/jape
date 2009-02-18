@@ -1,6 +1,6 @@
 THIS CODE IS PUBLISHED UNDER THE GPL LICENSE, COPYRIGHT JAMES WAPLES 2009
 
-JAPE-0.0.5
+JAPE-0.0.6
 
 All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
 it also displays the frames/second and has a function that allows animation to be played at a speed
@@ -9,11 +9,15 @@ particles, drawing them, updating them (calculating next positions)). 0.0.3 and 
 prompt in the opengl window to report any messages using Terminal.print(). the functions then take care of 
 scrolling out put/displaying it. 0.0.5 now has the ability to give properties to a point to control 
 the direction/speed of the particles to make different effects, like fountains or explosions etc. 
-(well, dunno about the explosions. maybe add a function to disable/reenable points). 
+(well, dunno about the explosions. maybe add a function to disable/reenable points). 0.0.6 and above uses GLPNG
+
+	sudo apt-get install glpng
+	
+have fun :)
 
 BUGS:
 
-for some reason a japeEmitter point Y position cant be anything other than zero (craptastic ¬¬)
+for some reason a japeEmitter point Y position cant be anything other than zero (craptastic ¬¬) - CHRIIIIIS
 
 KEYS:
 
@@ -25,3 +29,4 @@ B:		bomb 2
 N:		bomb 3
 Q/Esc:	quit
 R:		reset roatation
+P:		pause/resume simulation
