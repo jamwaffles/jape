@@ -31,10 +31,10 @@ japeEmitterProperties;
 class japeEmitter
 {	
 	japeParticle *particles;				//i obviously need this to do something with or i get errors
-	japeParticle *particles2;
 	japeEmitterProperties EmitterProperties;
 	int particleCount;						//global variable to store number of particles from japeEmitter::createParticles()
 	float pointx, pointy, pointz;
+	float pointSize;
 	
 	public:
 		int type;

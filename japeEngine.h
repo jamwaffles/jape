@@ -40,6 +40,7 @@ class japeEmitter
 		bool enabled;
 		float fadeAmount;
 		GLuint textureID;
+		float pointSize;
 		
 		int createParticles(int numParticles, float x, float y, float z);
 		void texture(char *filename, float size);

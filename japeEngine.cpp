@@ -3,7 +3,8 @@
 #include <malloc.h>
 #include <cstdlib>
 #include <assert.h>
-#include <gc/gc.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 float particleGravity = -0.0001f;
 bool globalGravity;
@@ -178,31 +179,34 @@ void japeEmitter::updateParticles(bool gravity)
 void japeEmitter::drawParticles()
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
+	
 	if(EmitterProperties.texsize != 0)
 	{
 		glBegin(GL_QUADS);
-		for(int i = 0; i < particleCount; i++)
-		{		
-			glColor4f(particles[i].colr, particles[i].colg, particles[i].colb, particles[i].life);
-			
-				glTexCoord2f(0.0f, 0.0f); glVertex3f(particles[i].posx - EmitterProperties.texsize, particles[i].posy - EmitterProperties.texsize,  particles[i].posz);
-				glTexCoord2f(1.0f, 0.0f); glVertex3f(particles[i].posx + EmitterProperties.texsize, particles[i].posy - EmitterProperties.texsize,  particles[i].posz);
-				glTexCoord2f(1.0f, 1.0f); glVertex3f(particles[i].posx + EmitterProperties.texsize, particles[i].posy + EmitterProperties.texsize,  particles[i].posz);
-				glTexCoord2f(0.0f, 1.0f); glVertex3f(particles[i].posx - EmitterProperties.texsize, particles[i].posy + EmitterProperties.texsize,  particles[i].posz);
-			
-		}
+    	{
+    	    for(int z = 0; z < particleCount; z++)
+			{	
+				glColor4f(particles[z].colr, particles[z].colg, particles[z].colb, particles[z].life);
+
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(particles[z].posx - EmitterProperties.texsize, particles[z].posy - EmitterProperties.texsize, particles[z].posz);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(particles[z].posx + EmitterProperties.texsize, particles[z].posy - EmitterProperties.texsize, particles[z].posz);
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(particles[z].posx + EmitterProperties.texsize, particles[z].posy + EmitterProperties.texsize, particles[z].posz);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(particles[z].posx - EmitterProperties.texsize, particles[z].posy + EmitterProperties.texsize, particles[z].posz);
+			}
+    	}
 		glEnd();
 	}
 	else
 	{
+		glPointSize(pointSize);
+		glBegin(GL_POINTS);
 		for(int z = 0; z < particleCount; z++)
 		{	
-			glPointSize(5);
 			glColor4f(particles[z].colr, particles[z].colg, particles[z].colb, particles[z].life);
-			glBegin(GL_POINTS);
-				glVertex3f(particles[z].posx, particles[z].posy, particles[z].posz);
-			glEnd();
+			
+			glVertex3f(particles[z].posx, particles[z].posy, particles[z].posz);
 		}
+		glEnd();
 	}
 }
 

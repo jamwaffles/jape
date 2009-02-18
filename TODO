@@ -7,6 +7,8 @@ works (sort of)
 Add texture support and ability to have it on/off for certain points. on second thoughts, add something that allows a shape 
 drawing function (textures, polies, points) to define what the particle looks like. DONE: now uses GLPNG to add textures. 
 
-TODO: POINT SPRITES
+TODO: POINT SPRITES *DONE*
+
+TODO: MAKE SPRITES GET BIGGER/SMALLER WITH CAMERA DISTANCE - attenuation
 
 
