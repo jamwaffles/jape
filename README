@@ -2,7 +2,7 @@ THIS CODE IS PUBLISHED UNDER THE GPL LICENSE, COPYRIGHT JAMES WAPLES 2009
 
 SEE GPL.txt FOR MORE INFO ON THIS LICENSE
 
-JAPE-0.0.6
+JAPE-0.0.7
 
 All this does is provide a basic OpenGL window with font rendering capability and double buffering. 
 it also displays the frames/second and has a function that allows animation to be played at a speed
@@ -23,15 +23,15 @@ BENCHMARKS:
 
 Before point sprites and stuff:
 
-	74/75 fps
+	110/120 fps
 	
 After point sprites and stuff:
 
-	dunno
+	120/130 fps
 
 BUGS:
 
-for some reason a japeEmitter point Y position cant be anything other than zero (craptastic ¬¬) - CHRIIIIIS
+*STOMPED*	for some reason a japeEmitter point Y position cant be anything other than zero (craptastic ¬¬)
 
 KEYS:
 
@@ -45,19 +45,3 @@ Q/Esc:	quit
 R:		reset roatation
 P:		pause/resume simulation
 
-for point sprites: (bad as i cant get attenuation to work)
-
-glEnable(GL_POINT_SPRITE);
-glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
-glBegin( GL_POINTS );
-{
-	for(int z = 0; z < particleCount; z++)
-	{	
-		glPointSize(EmitterProperties.texsize);
-		glColor4f(particles[z].colr, particles[z].colg, particles[z].colb, particles[z].life);
-		glBegin(GL_POINTS);
-			glVertex3f(particles[z].posx, particles[z].posy, particles[z].posz);
-		glEnd();
-	}
-}
-glEnd();glDisable(GL_POINT_SPRITE);

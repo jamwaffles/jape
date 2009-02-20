@@ -45,7 +45,7 @@ class japeEmitter
 		int createParticles(int numParticles, float x, float y, float z);
 		void texture(char *filename, float size);
 		void colorParticles(float r, float g, float b);
-		void updateParticles(bool gravity);
+		void updateParticles(bool gravity, float frametime);
 		void drawParticles(void);
 		void randSet(int vel, int acc);
 		void movePoint(float x, float y, float z);

@@ -1,10 +1,10 @@
+#include "GLee.h"
 #include "japeEngine.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <cstdlib>
 #include <assert.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+
 
 float particleGravity = -0.0001f;
 bool globalGravity;
@@ -98,6 +98,13 @@ void japeEmitter::texture(char *filename, float size)
 
 	printf(" Properties of '%s' : Size = %ix%i Depth = %i Alpha = %i\n", filename, info.Width, info.Height, info.Depth, info.Alpha);
 
+	float fAtten[4] = { 0.0f, 0.0f, 0.01f };
+	glPointParameterf(GL_POINT_SIZE_MIN, 0.1f);
+	glPointParameterf(GL_POINT_SIZE_MAX, 100.0f);
+	glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION_ARB, fAtten);
+	glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE_ARB, 60.0f);
+
+	
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(0, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -117,16 +124,17 @@ void japeEmitter::colorParticles(float r, float g, float b)
 	}
 }
 
-void japeEmitter::updateParticles(bool gravity)
+void japeEmitter::updateParticles(bool gravity, float frametime)
 {
 	globalGravity = gravity;
 
-
 	for(int y = 0; y < particleCount; y++)
 	{
-		particles[y].posx += particles[y].velx;
-		particles[y].posy += particles[y].vely;
-		particles[y].posz += particles[y].velz;
+		// * (frametime * 100) keeps particles at constant speed regardless of fps. requrires openglFrameTimer.h
+		
+		particles[y].posx += particles[y].velx * (frametime * 100);
+		particles[y].posy += particles[y].vely * (frametime * 100);
+		particles[y].posz += particles[y].velz * (frametime * 100);
 		//
 		particles[y].velx += particles[y].accx;
 		particles[y].vely += particles[y].accy;
@@ -182,19 +190,21 @@ void japeEmitter::drawParticles()
 	
 	if(EmitterProperties.texsize != 0)
 	{
-		glBegin(GL_QUADS);
-    	{
-    	    for(int z = 0; z < particleCount; z++)
+		glEnable(GL_POINT_SPRITE);
+		glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+		glBegin( GL_POINTS );
+		{
+			for(int z = 0; z < particleCount; z++)
 			{	
+				glPointSize(10);
 				glColor4f(particles[z].colr, particles[z].colg, particles[z].colb, particles[z].life);
-
-				glTexCoord2f(0.0f, 0.0f); glVertex3f(particles[z].posx - EmitterProperties.texsize, particles[z].posy - EmitterProperties.texsize, particles[z].posz);
-				glTexCoord2f(1.0f, 0.0f); glVertex3f(particles[z].posx + EmitterProperties.texsize, particles[z].posy - EmitterProperties.texsize, particles[z].posz);
-				glTexCoord2f(1.0f, 1.0f); glVertex3f(particles[z].posx + EmitterProperties.texsize, particles[z].posy + EmitterProperties.texsize, particles[z].posz);
-				glTexCoord2f(0.0f, 1.0f); glVertex3f(particles[z].posx - EmitterProperties.texsize, particles[z].posy + EmitterProperties.texsize, particles[z].posz);
+				glBegin(GL_POINTS);
+					glVertex3f(particles[z].posx, particles[z].posy, particles[z].posz);
+				glEnd();
 			}
-    	}
+		}
 		glEnd();
+		glDisable(GL_POINT_SPRITE);
 	}
 	else
 	{

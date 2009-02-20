@@ -1,14 +1,14 @@
-JAPE-0.0.6
+JAPE-0.0.7
 
 Add ability to enter things in the Terminal and allow the user to decide when they want a new line or not (\n) - SourceBoost
 LCD functions should come in handy for finding '\n's. TODO: also add ablility to output variables. newline function now 
 works (sort of)
 
 Add texture support and ability to have it on/off for certain points. on second thoughts, add something that allows a shape 
-drawing function (textures, polies, points) to define what the particle looks like. DONE: now uses GLPNG to add textures. 
+drawing function (textures, polies, points) to define what the particle looks like. *DONE*: now uses GLPNG to add textures. 
 
 TODO: POINT SPRITES *DONE*
 
-TODO: MAKE SPRITES GET BIGGER/SMALLER WITH CAMERA DISTANCE - attenuation
+TODO: MAKE SPRITES GET BIGGER/SMALLER WITH CAMERA DISTANCE - attenuation *DONE*
 
-
+TODO: Stamp bug that segfaults if emitter y pos is anything other than zero

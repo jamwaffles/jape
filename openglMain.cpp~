@@ -1,3 +1,4 @@
+#include "GLee.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -5,7 +6,6 @@
 #include "openglFrameTimer.h"
 #include "openglFps.h"
 #include "japeEngine.h"
-#include <gc/gc.h>
 
 unsigned int g_persp = 0, g_ortho = 0;
 float angle = 0.0;
@@ -52,7 +52,7 @@ void japeInit()
 	
 	Bomb1.type = JAPE_EXPLOSION;
 	Bomb1.texture("./Textures/particleflare.png", 0.07);
-	Bomb1.createParticles(200, 2, 0, 0);
+	Bomb1.createParticles(2000, 2, 0, 0);
 	Bomb1.vectorParticles(50, 50, 50);
 	Bomb1.speedParticles(1000, 1000, 1000);
 	Bomb1.colorParticles(1, 0.5, 0);
@@ -101,13 +101,12 @@ void openglIdle()
 		{
 			angle += 20 * FrameTime();
 		}
-		
-		Emitter.updateParticles(true);
-		Emitter2.updateParticles(true);	 
-		Emitter3.updateParticles(false);
-		Bomb1.updateParticles(false);
-		Bomb2.updateParticles(true);
-		Bomb3.updateParticles(true);
+		Emitter.updateParticles(true, FrameTime());
+		Emitter2.updateParticles(true, FrameTime());	 
+		Emitter3.updateParticles(false, FrameTime());
+		Bomb1.updateParticles(false, FrameTime());
+		Bomb2.updateParticles(true, FrameTime());
+		Bomb3.updateParticles(true, FrameTime());
 	}
 
 	// redraw the screen
@@ -178,7 +177,7 @@ void openglDraw(void)
 	glCallList(g_persp);
 
 	// set the camera position
-	gluLookAt(	1, 1, camZpos,	//	eye pos
+	gluLookAt(	0, 1, camZpos,	//	eye pos
 				0, 0, 0,	//	aim point
 				0, 1, 0);	//	up direction
 
@@ -294,19 +293,19 @@ void openglNormalKeys(unsigned char key, int x, int y)
 		
 		case 'v':
 			Bomb1.enabled = true;
-			Bomb1.updateParticles(false);
+			Bomb1.updateParticles(false, FrameTime());
 			Bomb1.enabled = false;
 		break;
 		
 		case 'b':
 			Bomb2.enabled = true;
-			Bomb2.updateParticles(true);
+			Bomb2.updateParticles(true, FrameTime());
 			Bomb2.enabled = false;
 		break;
 		
 		case 'n':
 			Bomb3.enabled = true;
-			Bomb3.updateParticles(true);
+			Bomb3.updateParticles(true, FrameTime());
 			Bomb3.enabled = false;
 		break;
 	}
@@ -364,7 +363,6 @@ int openglInit()
 
 int main(int argc, char **argv) 
 {
-	GC_INIT();
 	showTerminal = true;
 	
 	glutInit(&argc, argv);
