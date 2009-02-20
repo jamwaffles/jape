@@ -5,13 +5,20 @@
 #include <cstdlib>
 #include <assert.h>
 
-
-float particleGravity = -0.0001f;
 bool globalGravity;
 float fadeAmount = 1000.0f;
 
-int japeEmitter::createParticles(int numParticles, float x, float y, float z)
+int japeEmitter::createParticles(int numParticles, float x, float y, float z, float weight)
 {
+	if(weight != 0)
+	{
+		globalWeight = (weight / 100000 * -1);
+		gravity = true;
+	}
+	else
+	{
+		gravity = false;
+	}
 	pointx = x;
 	pointy = y;
 	pointz = z;	
@@ -39,8 +46,8 @@ int japeEmitter::createParticles(int numParticles, float x, float y, float z)
 			particles[pCount].colg = 0;;
 			particles[pCount].colb = 0;
 			
-			particles[pCount].fade = 1 + rand() % 100;
-			particles[pCount].life = 0;
+			particles[pCount].fade = float(rand() % 100) / 1000 + 0.003f;
+			particles[pCount].life = 1;
 		}
 		else if(type == JAPE_EXPLOSION)
 		{
@@ -51,7 +58,7 @@ int japeEmitter::createParticles(int numParticles, float x, float y, float z)
 			particles[pCount].accx = 0;
 			if(globalGravity)
 			{
-				particles[pCount].accy = particleGravity;
+				particles[pCount].accy = globalWeight;
 			}
 			else if(!globalGravity)
 			{
@@ -83,17 +90,16 @@ int japeEmitter::createParticles(int numParticles, float x, float y, float z)
 	particleCount = numParticles;
 }
 
-void japeEmitter::texture(char *filename, float size)
+int japeEmitter::texture(char *filename, float size)
 {
 	pngInfo info;
-	
 	EmitterProperties.texsize = size;
 	
 	textureID = pngBind(filename, PNG_NOMIPMAP, PNG_ALPHA, &info, GL_CLAMP, GL_NEAREST, GL_NEAREST);
 	if(textureID == 0) 
 	{
 		printf(" Can't load file %s\n", filename);
-		//exit(1);
+		return(1);
 	}
 
 	printf(" Properties of '%s' : Size = %ix%i Depth = %i Alpha = %i\n", filename, info.Width, info.Height, info.Depth, info.Alpha);
@@ -103,7 +109,6 @@ void japeEmitter::texture(char *filename, float size)
 	glPointParameterf(GL_POINT_SIZE_MAX, 100.0f);
 	glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION_ARB, fAtten);
 	glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE_ARB, 60.0f);
-
 	
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(0, &textureID);
@@ -124,10 +129,8 @@ void japeEmitter::colorParticles(float r, float g, float b)
 	}
 }
 
-void japeEmitter::updateParticles(bool gravity, float frametime)
+void japeEmitter::updateParticles(float frametime)
 {
-	globalGravity = gravity;
-
 	for(int y = 0; y < particleCount; y++)
 	{
 		// * (frametime * 100) keeps particles at constant speed regardless of fps. requrires openglFrameTimer.h
@@ -139,8 +142,7 @@ void japeEmitter::updateParticles(bool gravity, float frametime)
 		particles[y].velx += particles[y].accx;
 		particles[y].vely += particles[y].accy;
 		particles[y].velz += particles[y].accz;
-	
-		particles[y].life -= particles[y].fade;
+		particles[y].life -= (particles[y].fade / (fadeAmount / 100));
 		
 		if(enabled)
 		{
@@ -153,7 +155,7 @@ void japeEmitter::updateParticles(bool gravity, float frametime)
 				particles[y].accx = 0;
 				if(gravity)
 				{
-					particles[y].accy = particleGravity;
+					particles[y].accy = globalWeight;
 				}
 				else if(!gravity)
 				{
@@ -178,7 +180,7 @@ void japeEmitter::updateParticles(bool gravity, float frametime)
 				particles[y].colb = EmitterProperties.colb;
 		
 				particles[y].life = 5.0f;
-				particles[y].fade = float(rand() % 100) / fadeAmount + 0.003f;
+				particles[y].fade = float(rand() % 100) / 1000 + 0.003f;
 			}
 		}		
 	}
@@ -192,11 +194,11 @@ void japeEmitter::drawParticles()
 	{
 		glEnable(GL_POINT_SPRITE);
 		glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
-		glBegin( GL_POINTS );
+		glPointSize(EmitterProperties.texsize);
+		glBegin(GL_POINTS);
 		{
 			for(int z = 0; z < particleCount; z++)
 			{	
-				glPointSize(10);
 				glColor4f(particles[z].colr, particles[z].colg, particles[z].colb, particles[z].life);
 				glBegin(GL_POINTS);
 					glVertex3f(particles[z].posx, particles[z].posy, particles[z].posz);
@@ -220,7 +222,7 @@ void japeEmitter::drawParticles()
 	}
 }
 
-void japeEmitter::movePoint(float x, float y, float z)
+void japeEmitter::move(float x, float y, float z)
 {
 	pointx = x;
 	pointy = y;

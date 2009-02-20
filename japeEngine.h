@@ -40,15 +40,18 @@ class japeEmitter
 		bool enabled;
 		float fadeAmount;
 		GLuint textureID;
+		int texCount;
 		float pointSize;
+		float gravity;
+		float globalWeight;
 		
-		int createParticles(int numParticles, float x, float y, float z);
-		void texture(char *filename, float size);
+		int createParticles(int numParticles, float x, float y, float z, float weight);
+		int texture(char *filename, float size);
 		void colorParticles(float r, float g, float b);
-		void updateParticles(bool gravity, float frametime);
+		void updateParticles(float frametime);
 		void drawParticles(void);
 		void randSet(int vel, int acc);
-		void movePoint(float x, float y, float z);
+		void move(float x, float y, float z);
 		void vectorParticles(float x, float y, float z);
 		void speedParticles(float x, float y, float z);
 };

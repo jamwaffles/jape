@@ -11,4 +11,4 @@ TODO: POINT SPRITES *DONE*
 
 TODO: MAKE SPRITES GET BIGGER/SMALLER WITH CAMERA DISTANCE - attenuation *DONE*
 
-TODO: Stamp bug that segfaults if emitter y pos is anything other than zero
+TODO: Stamp bug that segfaults if emitter y pos is anything other than zero *DONE*

@@ -1,6 +1,7 @@
 #include "GLee.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
 
 #include "openglTerminal.h"
 #include "openglFrameTimer.h"
@@ -12,6 +13,7 @@ float angle = 0.0;
 int windowWidth = 800, windowHeight = 600;
 bool showTerminal;
 float camZpos = 10;
+char version[] = "0.0.8";
 
 japeEmitter Emitter;					//first point
 japeEmitter Emitter2;					//second point
@@ -19,6 +21,7 @@ japeEmitter Emitter3;
 japeEmitter Bomb1;
 japeEmitter Bomb2;
 japeEmitter Bomb3;
+japeEmitter Smoke;
 openglTerminal Terminal;				//output
 bool runSim = true;						//run simulation flag
 bool rotate = false;					//rotate flag
@@ -27,52 +30,52 @@ bool globalEnabled = true;
 void japeInit()
 {
 	Emitter.type = JAPE_POINT;
-	Emitter.texture("./Textures/particle.png", 0.07);
-	Emitter.createParticles(300, -1, 0, 0);
-	Emitter.vectorParticles(50, 0, 50);
-	Emitter.speedParticles(10000, 4000, 10000);
+	Emitter.texture("./Textures/particle.png", 10);
+	Emitter.createParticles(300, -1, 0, 0, 10);
+	Emitter.vectorParticles(50, -50, 50);
+	Emitter.speedParticles(10000, 5000, 10000);
 	Emitter.colorParticles(1, 1, 1);
-	Emitter.fadeAmount = 1000;
+	Emitter.fadeAmount = 10;
 	
 	Emitter2.type = JAPE_POINT;
-	Emitter2.texture("./Textures/particlehalo.png", 0.07);
-	Emitter2.createParticles(300, 1, 0, 0);
+	Emitter2.texture("./Textures/particlehalo.png", 10);
+	Emitter2.createParticles(300, 1, 0, 0, 10);
 	Emitter2.vectorParticles(50, 50, 50);
 	Emitter2.speedParticles(10000, 10000, 10000);
 	Emitter2.colorParticles(1, 1, 0);
-	Emitter2.fadeAmount = 1000;
+	Emitter2.fadeAmount = 20;
 	
 	Emitter3.type = JAPE_POINT;
-	Emitter3.texture("./Textures/dust.png", 0.07);
-	Emitter3.createParticles(300, 0, 0, 0);
+	Emitter3.texture("./Textures/cloud.png", 10);
+	Emitter3.createParticles(300, 0, 0, 0, 0);
 	Emitter3.vectorParticles(50, 50, 50);
 	Emitter3.speedParticles(10000, 10000, 10000);
-	Emitter3.colorParticles(1, 0, 1);
-	Emitter3.fadeAmount = 1000;
+	Emitter3.colorParticles(0.7, 0.4, 0.4);
+	Emitter3.fadeAmount = 20;
 	
 	Bomb1.type = JAPE_EXPLOSION;
-	Bomb1.texture("./Textures/particleflare.png", 0.07);
-	Bomb1.createParticles(2000, 2, 0, 0);
+	Bomb1.texture("./Textures/particleflare.png", 30);
+	Bomb1.createParticles(600, 2, 0, 0, 0);
 	Bomb1.vectorParticles(50, 50, 50);
 	Bomb1.speedParticles(1000, 1000, 1000);
 	Bomb1.colorParticles(1, 0.5, 0);
-	Bomb1.fadeAmount = 100;
+	Bomb1.fadeAmount = 20;
 	
 	Bomb2.type = JAPE_EXPLOSION;
 	Bomb2.pointSize = 5;
-	Bomb2.createParticles(200, 3, 0, 0);
+	Bomb2.createParticles(200, 3, 0, 0, 10);
 	Bomb2.vectorParticles(50, 50, 50);
 	Bomb2.speedParticles(1000, 1000, 1000);
 	Bomb2.colorParticles(1, 0.1, 0);
-	Bomb2.fadeAmount = 100;
+	Bomb2.fadeAmount = 10;
 	
 	Bomb3.type = JAPE_EXPLOSION;
 	Bomb3.pointSize = 5;
-	Bomb3.createParticles(200, -2, 0, 0);
-	Bomb3.vectorParticles(50, 0, 50);
-	Bomb3.speedParticles(10000, 2000, 10000);
+	Bomb3.createParticles(200, -2, 0, 0, 0);
+	Bomb3.vectorParticles(50, -50, 50);
+	Bomb3.speedParticles(10000, 5000, 10000);
 	Bomb3.colorParticles(1, 0.1, 0);
-	Bomb3.fadeAmount = 100;
+	Bomb3.fadeAmount = 10;
 	
 	Emitter.enabled = true;
 	Emitter2.enabled = true;
@@ -101,12 +104,12 @@ void openglIdle()
 		{
 			angle += 20 * FrameTime();
 		}
-		Emitter.updateParticles(true, FrameTime());
-		Emitter2.updateParticles(true, FrameTime());	 
-		Emitter3.updateParticles(false, FrameTime());
-		Bomb1.updateParticles(false, FrameTime());
-		Bomb2.updateParticles(true, FrameTime());
-		Bomb3.updateParticles(true, FrameTime());
+		Emitter.updateParticles(FrameTime());
+		Emitter2.updateParticles(FrameTime());	 
+		Emitter3.updateParticles(FrameTime());
+		Bomb1.updateParticles(FrameTime());
+		Bomb2.updateParticles(FrameTime());
+		Bomb3.updateParticles(FrameTime());
 	}
 
 	// redraw the screen
@@ -293,20 +296,28 @@ void openglNormalKeys(unsigned char key, int x, int y)
 		
 		case 'v':
 			Bomb1.enabled = true;
-			Bomb1.updateParticles(false, FrameTime());
+			Bomb1.updateParticles(FrameTime());
 			Bomb1.enabled = false;
 		break;
 		
 		case 'b':
 			Bomb2.enabled = true;
-			Bomb2.updateParticles(true, FrameTime());
+			Bomb2.updateParticles(FrameTime());
 			Bomb2.enabled = false;
 		break;
 		
 		case 'n':
 			Bomb3.enabled = true;
-			Bomb3.updateParticles(true, FrameTime());
+			Bomb3.updateParticles(FrameTime());
 			Bomb3.enabled = false;
+		break;
+		
+		case 'z':
+			camZpos += 0.5;
+		break;
+		
+		case 'a':
+			camZpos -= 0.5;
 		break;
 	}
 }
@@ -315,13 +326,18 @@ void openglSpecialKeys(int key, int x, int y)
 {
 	switch (key) 
 	{
-		case GLUT_KEY_DOWN:
-			camZpos += 0.5;
-		break;
-		case GLUT_KEY_UP:
-			camZpos -= 0.5;
-		break;
+		
 	}
+}
+
+void processMouseActiveMotion(int x, int y) 
+{
+	
+}
+
+void processMousePassiveMotion(int x, int y) 
+{
+	
 }
 
 int openglInit()
@@ -359,17 +375,26 @@ int openglInit()
 	//adding here the setting of keyboard processing
 	glutKeyboardFunc(openglNormalKeys);
 	glutSpecialFunc(openglSpecialKeys);
+	glutMotionFunc(processMouseActiveMotion);
+	glutPassiveMotionFunc(processMousePassiveMotion); 
 }
 
 int main(int argc, char **argv) 
 {
-	showTerminal = true;
-	
+	for(int i = 1; i < argc; i++) 
+	{
+    	if(!strcmp("-v", argv[i])) 
+    	{
+    	  	cout << " Version: " << version << endl;
+    	  	exit(0);
+    	} 
+  	}
+  	
 	glutInit(&argc, argv);
 	openglInit();
 	japeInit();
 	
-	Terminal.print("JAPE-0.0.6\n", BOTH);
+	Terminal.print("JAPE-0.0.8\n", BOTH);
 	Terminal.print("Cool JAPE engine demo with different effects\n", BOTH);
 	
 	Terminal.print("Initialising frame timer/counter... ", COUT);
