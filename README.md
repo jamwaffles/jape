@@ -2,6 +2,8 @@
 
 Written a very long time ago when I barely new what C was. It's not very amazing :)
 
+![](./screenshot.png)
+
 ## Running
 
 `glpng` installs to a non-standard path, so the example must be run something like
