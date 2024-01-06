@@ -1,0 +1,3 @@
+[submodule "glpng"]
+	path = glpng
+	url = https://github.com/thomasmarsh/glpng.git
