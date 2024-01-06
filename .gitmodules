@@ -1,3 +1,6 @@
 [submodule "glpng"]
 	path = glpng
 	url = https://github.com/thomasmarsh/glpng.git
+[submodule "glee"]
+	path = glee
+	url = https://github.com/kallisti5/glee.git
